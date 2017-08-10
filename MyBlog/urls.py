@@ -15,10 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from blog.feed import ArticleFeed
+from blog.views import IndexView
 
 
 urlpatterns = [
+    url(r'^$', IndexView.as_view(), name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'blog/', include('blog.urls', namespace='blog')),
     url(r'', include('comments.urls', namespace='comments')),
+    url(r'^rss/$', ArticleFeed(), name='rss'),
 ]
