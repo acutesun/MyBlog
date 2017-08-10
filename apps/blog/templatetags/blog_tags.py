@@ -25,7 +25,7 @@ def archives():
     归档模板标签
     :return: 返回date 对象，精确到月份
     '''
-    arch = Article.objects.dates('create_time', 'day', order='DESC')  # 降序排列
+    arch = Article.objects.dates('create_time', 'month', order='DESC')  # 降序排列
     return arch
 
 

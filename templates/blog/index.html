@@ -3,7 +3,11 @@
 
 {% block content %}
     <main class="col-md-8">
-        {% for article in articles %}
+        {% if error_msg %}
+            <p>{{ error_msg }}</p>
+        {% endif %}
+        {% if articles.object_list %}
+            {% for article in articles.object_list %}
             <article class="post post-2">
                 <header class="entry-header">
                     <h1 class="entry-title">
@@ -29,27 +33,66 @@
         {% empty %}
             <div class="no-post">暂时还没有发布的文章！</div>
         {% endfor %}
-        <!-- 简单分页效果
-        <div class="pagination-simple">
-            <a href="#">上一页</a>
-            <span class="current">第 6 页 / 共 11 页</span>
-            <a href="#">下一页</a>
-        </div>
-        -->
-        <div class="pagination">
-            <ul>
-                <li><a href="">1</a></li>
-                <li><a href="">...</a></li>
-                <li><a href="">4</a></li>
-                <li><a href="">5</a></li>
-                <li class="current"><a href="">6</a></li>
-                <li><a href="">7</a></li>
-                <li><a href="">8</a></li>
-                <li><a href="">...</a></li>
-                <li><a href="">11</a></li>
+        {% else %}
+            {% for article in articles %}
+            <article class="post post-2">
+                <header class="entry-header">
+                    <h1 class="entry-title">
+                        <a href="{% url 'blog:detail' article.id %}">{{ article.title }}</a>
+                    </h1>
+                    <div class="entry-meta">
+                        <span class="post-category"><a href="#">{{ article.categorys }}</a></span>
+                        <span class="post-date"><a href="#"><time class="entry-date"
+                                                                  datetime="2012-11-09T23:15:57+00:00">{{ article.create_time }}</time></a></span>
+                        <span class="post-author"><a href="#">{{ article.author }}</a></span>
+                        <span class="comments-link"><a href="#">4 评论</a></span>
+                        <span class="views-count"><a href="#">{{ article.click_nums }} 阅读</a></span>
+                    </div>
+                </header>
+                <div class="entry-content clearfix">
+                    <p>{{ article.excerpt }}</p>
+                    <div class="read-more cl-effect-14">
+                        <a href="{% url 'blog:detail' article.id %}" class="more-link">继续阅读 <span
+                                class="meta-nav">→</span></a>
+                    </div>
+                </div>
+            </article>
+        {% empty %}
+            <div class="no-post">暂时还没有发布的文章！</div>
+        {% endfor %}
+        {% endif %}
+
+
+
+
+        <div class="pageturn">
+            <ul class="pagelist">
+                <div class="pagination">
+                    {% load i18n %}
+                    {% if articles.has_previous %}
+                        <li class="long"><a href="?{{ articles.previous_page_number.querystring }}"
+                                            class="prev">&lsaquo;&lsaquo;{% trans "上一页" %}</a></li>
+                    {% endif %}
+
+                    {% for page in articles.pages %}
+                        {% if page %}
+                            {% ifequal page articles.number %}
+                                <li class="active"><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                            {% else %}
+                                <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                            {% endifequal %}
+                        {% else %}
+                            <li class="none"><a href="">...</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if articles.has_next %}
+                        <li class="long"><a href="?{{ articles.next_page_number.querystring }}"
+                                            class="next">{% trans "下一页" %} &rsaquo;&rsaquo;</a></li>
+                    {% endif %}
+                </div>
             </ul>
         </div>
+
     </main>
 {% endblock %}
-
 
