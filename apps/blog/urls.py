@@ -8,7 +8,4 @@ urlpatterns = [
     url(r'^archive/(?P<year>\d+)/(?P<month>\d+)/$', ArchivesView.as_view(), name='archive'),
     url(r'^category/(?P<id>\d+)/$', CategoryView.as_view(), name='category'),
     url(r'^about/$', AboutView.as_view(), name='about'),
-    url(r'^search/$', search, name='search'),
-
-
 ]

@@ -60,7 +60,7 @@ class ArticleDetailView(View):
 class ArchivesView(View):
     ''' 归档处理view '''
     def get(self, request, year, month):
-        articles = Article.objects.filter(create_time__year=year, create_time__month='08', create_time__day='09').order_by('-create_time')
+        articles = Article.objects.filter(create_time__year=year, create_time__month=month)
         context = {
             'articles': articles,
         }
