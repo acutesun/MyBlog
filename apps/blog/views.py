@@ -60,6 +60,7 @@ class ArticleDetailView(View):
 class ArchivesView(View):
     ''' 归档处理view '''
     def get(self, request, year, month):
+        # 使用mysql时无法查询， 需要MySQL：安装pytz，并使用mysql_tzinfo_to_sql加载时区表，看queryapi中的datetimes
         articles = Article.objects.filter(create_time__year=year, create_time__month=month)
         context = {
             'articles': articles,

@@ -4,6 +4,7 @@ from datetime import datetime
 from django.shortcuts import reverse
 from django.utils.html import strip_tags
 import markdown
+from django.utils import timezone
 
 
 class Category(models.Model):
@@ -34,8 +35,8 @@ class Article(models.Model):
     ''' 博客文章 '''
     title = models.CharField(max_length=60, verbose_name='文章标题')
     content = models.TextField(verbose_name='文章内容')
-    create_time = models.DateTimeField(default=datetime.now, verbose_name='创建时间')
-    modify_time = models.DateTimeField(default=datetime.now, verbose_name='修改时间')
+    create_time = models.DateField(default=timezone.now, verbose_name='创建时间')
+    modify_time = models.DateField(default=timezone.now, verbose_name='修改时间')
     excerpt = models.CharField(max_length=300, blank=True, verbose_name='文章摘要')
 
     tags = models.ManyToManyField(Tag, blank=True, verbose_name='文章标签')

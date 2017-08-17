@@ -2,6 +2,7 @@
 from ..models import Article, Category, Tag
 from django import template
 from django.db.models import Count
+from django.db.models.functions import ExtractMonth, ExtractYear
 
 
 register = template.Library()
@@ -26,6 +27,10 @@ def archives():
     :return: 返回date 对象，精确到月份
     '''
     arch = Article.objects.dates('create_time', 'month', order='DESC')  # 降序排列
+    # arch = Article.objects.annotate(
+    #     month=ExtractMonth('create_time'),
+    #     # year=ExtractYear('create_time'),
+    # ).values('month').aggregate(Count('month'))
     return arch
 
 
