@@ -4,11 +4,10 @@ from django import template
 from django.db.models import Count
 from django.db.models.functions import ExtractMonth, ExtractYear
 
-
 register = template.Library()
 
 
-@register.simple_tag   # 注册为模板标签
+@register.simple_tag  # 注册为模板标签
 def get_new_articles(num=5):
     '''
     最新文章模板标签
@@ -26,12 +25,19 @@ def archives():
     归档模板标签
     :return: 返回date 对象，精确到月份
     '''
-    arch = Article.objects.dates('create_time', 'month', order='DESC')  # 降序排列
-    # arch = Article.objects.annotate(
-    #     month=ExtractMonth('create_time'),
-    #     # year=ExtractYear('create_time'),
-    # ).values('month').aggregate(Count('month'))
-    return arch
+    from django.db import connection
+    sql = '''
+        select DATE_FORMAT(create_time,'%Y') year, DATE_FORMAT(create_time,'%m') month,COUNT(create_time) nums
+        from blog_article group by month, year;
+    '''
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        desc = cursor.description
+        archs = [
+            dict(zip([col[0] for col in desc], row))
+            for row in cursor.fetchall()
+            ]
+    return archs
 
 
 @register.simple_tag

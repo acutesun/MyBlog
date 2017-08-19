@@ -45,6 +45,9 @@ class Article(models.Model):
     author = models.ForeignKey(User, verbose_name='作者')
     click_nums = models.IntegerField(verbose_name='阅读数', default=1)
 
+    def __str__(self):
+        return self.title
+
     def get_absolute_url(self):
         return reverse('blog:detail', kwargs={'id': self.id})
 
